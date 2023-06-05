@@ -4,6 +4,11 @@ import { useEffect } from "react";
 import { Session } from "next-auth";
 import Layout from "@/components/layout";
 import { RecoilRoot } from "recoil";
+import Head from "next/head";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "@/theme";
+import CssBaseline from '@mui/material/CssBaseline';
+import { SnackbarProvider } from "notistack";
 
 // function DebugObserver(): any {
 //   const snapshot = useRecoilSnapshot();
@@ -21,9 +26,22 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps<{ s
   return (
     <SessionProvider session={session}>
       <RecoilRoot>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <SnackbarProvider maxSnack={3} autoHideDuration={3000} anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}>
+          <Head>
+            <title>PyDay La Paz 2023</title>
+            <meta name="description" content="PyDay La Paz 2023" />
+            <meta name="viewport" content="initial-scale=1, width=device-width" />
+          </Head>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ThemeProvider>
+        </SnackbarProvider>
       </RecoilRoot>
     </SessionProvider>
   );

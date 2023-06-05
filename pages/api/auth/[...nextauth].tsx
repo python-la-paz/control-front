@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
                 let formdata = new FormData();
                 formdata.append("username", credentials.username);
                 formdata.append("password", credentials.password);
-                const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/auth/token", {
+                const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/v1/auth/token", {
                     method: 'POST',
                     body: formdata,
                     redirect: 'follow'
