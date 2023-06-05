@@ -1,12 +1,15 @@
+import { LocationProps } from "@/const";
+
+export async function postLogin(formData: FormData): Promise<Response> {
+    return await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/v1/auth/token", {
+        method: 'POST',
+        body: formData,
+        redirect: 'follow'
+    })
+}
+
 export async function postRegistration(access_token: string, data: { ci: string, control_code: string }): Promise<{ message?: any, error: boolean }> {
     try {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL
-        //   const  {_id , ...recipeData }  = recipe;
-        //   const response = await axios.post(`${API_URL}/recipe/user/public`, recipeData, { "headers": { "Authorization": `Bearer ${access_token}` } });
-        // if (response.status !== 201) {
-        //     throw new Error(`${response.status} - ${response.data}`);
-        // }
-        // return { message: "" };
         const queryArray = Object.keys(data).reduce((prev: string[], item) => {
             const value = data[item as keyof typeof data];
             if (value) {
@@ -14,7 +17,7 @@ export async function postRegistration(access_token: string, data: { ci: string,
             }
             return prev;
         }, []);
-        const res = await fetch(`api/v1/participant/registration?${queryArray.join(`&`)}`, {
+        const res = await fetch(`/api/v1/participant/registration?${queryArray.join(`&`)}`, {
             method: 'POST',
             headers: {
                 "Authorization": `Bearer ${access_token}`,
@@ -22,7 +25,7 @@ export async function postRegistration(access_token: string, data: { ci: string,
         })
         if (res.status !== 200) {
             const error = await res.text();
-            return { message: `${res.status} - ${error}`, error: true}
+            return { message: `${res.status} - ${error}`, error: true }
         }
         return { message: "Participante Registrado", error: false };
 
@@ -30,3 +33,44 @@ export async function postRegistration(access_token: string, data: { ci: string,
         return { message: error.message, error: true };
     }
 }
+
+export async function getLocations(access_token: string): Promise<{ data: LocationProps[], message?: string, error: boolean }> {
+    const res = await fetch(`/api/v1/location`, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${access_token}`,
+        },
+    });
+    if (res.status !== 200) {
+        const error = await res.text();
+        return { data: [], message: `${res.status} - ${error}`, error: true }
+    }
+    const data = await res.json();
+    return { data, error: false };
+}
+
+export async function postCheckInOut(access_token: string, data: { participant_control_code: string, location_id: string, check: boolean }): Promise<{ message?: any, error: boolean }> {
+    try {
+        const queryArray = Object.keys(data).reduce((prev: string[], item) => {
+            const value = data[item as keyof typeof data]; 
+            if (value !== undefined) {
+                prev.push(`${item}=${value}`);
+            }
+            return prev;
+        }, []);
+        const res = await fetch(`/api/v1/control?${queryArray.join(`&`)}`, {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${access_token}`,
+            },
+        })
+        if (res.status !== 200) {
+            const error = await res.text();
+            return { message: `${res.status} - ${error}`, error: true }
+        }
+        return { message: data.check ? "Ingreso Permitido": "Salida Permitida" , error: false };
+
+    } catch (error: any) {
+        return { message: error.message, error: true };
+    }
+} 

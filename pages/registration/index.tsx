@@ -17,7 +17,7 @@ export default function Registration() {
     const { enqueueSnackbar } = useSnackbar();
     const [ci, setCI] = useState<string>("")
     const [qr, setQR] = useState<string>("")
-    const qrcodeRegionId = "html5qr-code-full-region";
+    const qrcodeRegionId = "html5qr-code-full-region-check-regis";
 
     const onNewScanResult = (qr: string) => {
         setQR(qr)
@@ -55,6 +55,7 @@ export default function Registration() {
     useEffect(() => {
         if (!session) {
             router.replace('/api/auth/signin');
+            return;
         }
         // when component mounts
         const config = { fps: 10, qrbox: 300, disableFlip: false };

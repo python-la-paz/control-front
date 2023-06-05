@@ -15,6 +15,7 @@ declare module "next-auth/jwt" {
     }
 }
 
+import { postLogin } from "@/lib/http";
 import NextAuth, { DefaultSession, NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
@@ -34,14 +35,10 @@ export const authOptions: NextAuthOptions = {
                 }
 
 
-                let formdata = new FormData();
-                formdata.append("username", credentials.username);
-                formdata.append("password", credentials.password);
-                const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/v1/auth/token", {
-                    method: 'POST',
-                    body: formdata,
-                    redirect: 'follow'
-                });
+                let formData = new FormData();
+                formData.append("username", credentials.username);
+                formData.append("password", credentials.password);
+                const res = await postLogin(formData);
                 const user = await res.json()
                 const { access_token } = user;
 
@@ -60,7 +57,7 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async jwt({ token, user }: any) {
-            // Persist the OAuth access_token to the token right after signin
+            // Persist the OAuth access_token to the token right after sign in
             if (user) {
                 token.access_token = user.access_token
                 token.username = user.username
