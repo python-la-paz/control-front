@@ -24,7 +24,6 @@ export default function Registration() {
         html5QrcodeScanner.pause()
     }
     const onScannError = (s: string) => {
-        console.log(s)
     }
     const handleCIChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setCI(event.target.value);

@@ -74,3 +74,29 @@ export async function postCheckInOut(access_token: string, data: { participant_c
         return { message: error.message, error: true };
     }
 } 
+
+export async function postRedeemMeal(access_token: string, data: { participant_control_code: string}): Promise<{ message?: any, error: boolean }> {
+    try {
+        const queryArray = Object.keys(data).reduce((prev: string[], item) => {
+            const value = data[item as keyof typeof data]; 
+            if (value !== undefined) {
+                prev.push(`${item}=${value}`);
+            }
+            return prev;
+        }, []);
+        const res = await fetch(`/api/v1/meals/redeem/user?${queryArray.join(`&`)}`, {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${access_token}`,
+            },
+        })
+        if (res.status !== 200) {
+            const error = await res.text();
+            return { message: `${res.status} - ${error}`, error: true }
+        }
+        return { message: "Entrega Registrada" , error: false };
+
+    } catch (error: any) {
+        return { message: error.message, error: true };
+    }
+} 

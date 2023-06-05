@@ -1,7 +1,6 @@
-import { getLocations, postCheckInOut, postRegistration } from "@/lib/http";
-import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
+import { getLocations, postCheckInOut } from "@/lib/http";
+import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { Html5QrcodeScanner } from "html5-qrcode";
-import { Html5Qrcode } from "html5-qrcode";
 import { useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
 import { useRecoilState } from "recoil";
@@ -28,24 +27,23 @@ export default function CheckIn() {
         html5QrcodeScanner.pause()
     }
     const onScannError = (s: string) => {
-        console.log(s)
     }
     const handleLocationChange = (event: SelectChangeEvent) => {
         setLocationSelected(event.target.value as string);
     };
 
-    const handleSendRegister = async () => {
+    const handleSend = async () => {
         const response = await postCheckInOut(token, { participant_control_code: qr, location_id: locationSelected, check: true });
         enqueueSnackbar(response.message, {
             variant: response.error ? "error" : "success",
         });
         if (!response.error) {
-            handleCleanRegister();
+            handleClean();
         } else {
             html5QrcodeScanner.resume();
         }
     }
-    const handleCleanRegister = () => {
+    const handleClean = () => {
         setQR("")
         try {
             console.log(html5QrcodeScanner);
@@ -111,10 +109,10 @@ export default function CheckIn() {
             <br />
             {qr !== "" &&
                 <>
-                    <Button fullWidth variant="contained" onClick={handleSendRegister} disabled={locationSelected === "" || qr === ""}>Check In</Button>
+                    <Button fullWidth variant="contained" onClick={handleSend} disabled={locationSelected === "" || qr === ""}>Check In</Button>
                     <br />
                     <br />
-                    <Button fullWidth variant="outlined" color="error" onClick={handleCleanRegister}>Limpiar</Button>
+                    <Button fullWidth variant="outlined" color="error" onClick={handleClean}>Limpiar</Button>
                 </>
             }
         </Container>
