@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
 import { LocationProps } from "@/const";
 let html5QrcodeScanner: Html5QrcodeScanner;
-export default function CheckIn() {
+export default function CheckOut() {
     const router = useRouter();
     const { data: session, status } = useSession();
 

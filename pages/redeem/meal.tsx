@@ -1,5 +1,5 @@
-import { getLocations, postRedeemMeal } from "@/lib/http";
-import { Box, Button, Container, SelectChangeEvent, Typography } from "@mui/material";
+import { postRedeemMeal } from "@/lib/http";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
@@ -7,9 +7,8 @@ import { useRecoilState } from "recoil";
 import { accessTokenState } from "@/atoms";
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
-import { LocationProps } from "@/const";
 let html5QrcodeScanner: Html5QrcodeScanner;
-export default function CheckIn() {
+export default function RedeemMeal() {
     const router = useRouter();
     const { data: session, status } = useSession();
 
@@ -46,12 +45,17 @@ export default function CheckIn() {
             console.log(e)
         }
     }
-
     useEffect(() => {
         if (!session) {
             router.replace('/api/auth/signin');
             return;
         }
+    }, [session])
+    useEffect(() => {
+        // if (!session) {
+        //     router.replace('/api/auth/signin');
+        //     return;
+        // }
 
         // when component mounts
         const config = { fps: 10, qrbox: 300, disableFlip: false };
