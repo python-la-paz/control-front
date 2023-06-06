@@ -20,7 +20,7 @@ export default function ObtainPoints() {
     const [presentations, setPresentations] = useState<PresentationProps[]>(empty)
     const [presentationSelected, setPresentationSelected] = useState<string>("")
     const [qr, setQR] = useState<string>("")
-    const qrcodeRegionId = "html5qr-code-full-region-check-in";
+    const qrcodeRegionId = "html5qr-code-full-region-points";
 
 
     const onNewScanResult = (qr: string) => {

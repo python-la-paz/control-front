@@ -20,7 +20,7 @@ export default function RedeemPoints() {
     const [gifts, setGifts] = useState<GiftProps[]>(empty)
     const [giftSelected, setGiftSelected] = useState<string>("")
     const [qr, setQR] = useState<string>("")
-    const qrcodeRegionId = "html5qr-code-full-region-check-in";
+    const qrcodeRegionId = "html5qr-code-full-region-redeem-gift";
 
 
     const onNewScanResult = (qr: string) => {
