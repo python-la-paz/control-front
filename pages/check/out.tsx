@@ -52,12 +52,19 @@ export default function CheckOut() {
             console.log(e)
         }
     }
-
     useEffect(() => {
-        if (!session) {
-            router.replace('/api/auth/signin');
-            return;
-        }
+        const fetchData = async () => {
+            if (status === 'loading') {
+                return;
+            }
+            if (!session) {
+                router.replace('/api/auth/signin');
+                return null;
+            }
+        };
+        fetchData();
+    }, [session, status]);
+    useEffect(() => {
         getLocations(token).then((res) => {
             if (res.error) {
                 enqueueSnackbar(res.message, {

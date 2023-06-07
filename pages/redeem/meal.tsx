@@ -46,17 +46,18 @@ export default function RedeemMeal() {
         }
     }
     useEffect(() => {
-        if (!session) {
-            router.replace('/api/auth/signin');
-            return;
-        }
-    }, [session])
+        const fetchData = async () => {
+            if (status === 'loading') {
+                return;
+            }
+            if (!session) {
+                router.replace('/api/auth/signin');
+                return null;
+            }
+        };
+        fetchData();
+    }, [session, status]);
     useEffect(() => {
-        // if (!session) {
-        //     router.replace('/api/auth/signin');
-        //     return;
-        // }
-
         // when component mounts
         const config = { fps: 10, qrbox: 300, disableFlip: false };
         const verbose = false;

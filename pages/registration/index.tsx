@@ -1,4 +1,4 @@
-import { postRegistration } from "@/lib/http";
+import { getParticipantByCi, postRegistration } from "@/lib/http";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { Html5Qrcode } from "html5-qrcode";
@@ -8,11 +8,13 @@ import { useRecoilState } from "recoil";
 import { accessTokenState } from "@/atoms";
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
+import { ParticipantProps } from "@/const";
 let html5QrcodeScanner: Html5QrcodeScanner;
 export default function Registration() {
     const router = useRouter();
     const { data: session, status } = useSession();
 
+    const [participant, setParticipant] = useState<ParticipantProps>({} as ParticipantProps)
     const [token] = useRecoilState(accessTokenState);
     const { enqueueSnackbar } = useSnackbar();
     const [ci, setCI] = useState<string>("")
@@ -41,6 +43,7 @@ export default function Registration() {
     const handleCleanRegister = () => {
         setCI("")
         setQR("")
+        setParticipant({} as ParticipantProps)
         try {
             console.log(html5QrcodeScanner);
             html5QrcodeScanner.resume()
@@ -48,14 +51,33 @@ export default function Registration() {
             console.log(e)
         }
     }
-
-
-
-    useEffect(() => {
-        if (!session) {
-            router.replace('/api/auth/signin');
+    const handleSearch = async () => {
+        setParticipant({} as ParticipantProps)
+        const response = await getParticipantByCi(token, { ci: ci });
+        if (response.error) {
+            enqueueSnackbar(response.message, {
+                variant: response.error ? "error" : "success",
+            });
             return;
         }
+        setParticipant(response.data)
+
+
+    }
+    useEffect(() => {
+        const fetchData = async () => {
+            if (status === 'loading') {
+                return;
+            }
+            if (!session) {
+                router.replace('/api/auth/signin');
+                return null;
+            }
+        };
+        fetchData();
+    }, [session, status]);
+
+    useEffect(() => {
         // when component mounts
         const config = { fps: 10, qrbox: 300, disableFlip: false };
         const verbose = false;
@@ -70,21 +92,40 @@ export default function Registration() {
     }, []);
 
 
-    
+
     return (
         <Container fixed>
             <Box justifyContent="center" alignItems="center" display="flex" >
                 <Typography variant="h4">Registro</Typography>
             </Box>
             <br />
-            <TextField id="ci" label="Carnet de Identidad" variant="outlined" value={ci} onChange={handleCIChange} fullWidth />
+            <Box>
+                <TextField id="ci" label="Carnet de Identidad" variant="outlined" value={ci} onChange={handleCIChange} fullWidth />
+            </Box>
             <br />
+            <Box>
+                <Button fullWidth variant="contained" onClick={handleSearch}>Buscar Participante</Button>
+            </Box>
             <br />
-            <div id={qrcodeRegionId} />
+            {participant._id !== undefined && participant._id !== "" &&
+                <>
+                    <Box justifyContent="center" alignItems="center" display="flex" >
+                        <Typography variant="h4">"{participant.name}"</Typography>
+                    </Box>
+                    <Box justifyContent="center" alignItems="center" display="flex" >
+                        <Typography variant="h6">{participant.registration ? "Ya registrado": "Disponible para Registrar" }</Typography>
+                    </Box>
+                </>
+
+            }
+            <br />
+            <Box>
+                <div id={qrcodeRegionId} />
+            </Box>
             <br />
             {qr !== "" &&
                 <>
-                    <Button fullWidth variant="contained" onClick={handleSendRegister} disabled={ci === "" || qr === ""}>Aceptar Registro</Button>
+                    <Button fullWidth variant="contained" onClick={handleSendRegister} disabled={ci === "" || qr === "" || participant._id === undefined}>Aceptar Registro</Button>
                     <br />
                     <br />
                     <Button fullWidth variant="outlined" color="error" onClick={handleCleanRegister}>Limpiar</Button>

@@ -19,8 +19,16 @@ export type GiftProps = {
 export type ParticipantProps = {
     _id: string;
     name: string;
+    ci: string;
     control_code: string;
     combos: string[];
+    points: number;
+    mail: string;
+    phone: string;
+    food_restriction: string;
+    gender: string;
+    t_shirt_size: string;
+    registration: boolean
 }
 
 export type ProductProps = {

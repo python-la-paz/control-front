@@ -206,6 +206,28 @@ export async function getParticipantByControlCode(access_token: string, data: { 
     return { data: data_fetch, error: false };
 }
 
+export async function getParticipantByCi(access_token: string, data: { ci: string }): Promise<{ data: ParticipantProps, message?: string, error: boolean }> {
+    const queryArray = Object.keys(data).reduce((prev: string[], item) => {
+        const value = data[item as keyof typeof data];
+        if (value !== undefined) {
+            prev.push(`${item}=${value}`);
+        }
+        return prev;
+    }, []);
+    const res = await fetch(`/api/v1/participant/user/ci?${queryArray.join(`&`)}`, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${access_token}`,
+        },
+    });
+    if (res.status !== 200) {
+        const error = await res.text();
+        return { data: {} as ParticipantProps, message: `${res.status} - ${error}`, error: true }
+    }
+    const data_fetch = await res.json();
+    return { data: data_fetch, error: false };
+}
+
 export async function getParticipantRedeemCombos(access_token: string, data: { participant_control_code: string }): Promise<{ data: ParticipantRedeemCombosProps[], message?: string, error: boolean }> {
     const queryArray = Object.keys(data).reduce((prev: string[], item) => {
         const value = data[item as keyof typeof data];

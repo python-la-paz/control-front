@@ -34,7 +34,7 @@ export default function RedeemPoints() {
     };
 
     const handleSend = async () => {
-        const response = await postRedeemGift(token, { participant_control_code: qr, gift_id : giftSelected  });
+        const response = await postRedeemGift(token, { participant_control_code: qr, gift_id: giftSelected });
         enqueueSnackbar(response.message, {
             variant: response.error ? "error" : "success",
         });
@@ -54,11 +54,17 @@ export default function RedeemPoints() {
         }
     }
     useEffect(() => {
-        if (!session) {
-            router.replace('/api/auth/signin');
-            return;
-        }
-    }, [session])
+        const fetchData = async () => {
+            if (status === 'loading') {
+                return;
+            }
+            if (!session) {
+                router.replace('/api/auth/signin');
+                return null;
+            }
+        };
+        fetchData();
+    }, [session, status]);
     useEffect(() => {
         getGifts(token).then((res) => {
             if (res.error) {
@@ -102,8 +108,8 @@ export default function RedeemPoints() {
                 >
                     {gifts.map((gift) => (
                         <MenuItem key={gift._id} value={gift._id} disabled={gift._id === ""}>
-                            <Typography variant="body1"  sx={{display: "inline-block", whiteSpace: "pre-line", wordBreak: "break-word" }}>
-                                {gift.product_name} ({gift.points} Pts.) 
+                            <Typography variant="body1" sx={{ display: "inline-block", whiteSpace: "pre-line", wordBreak: "break-word" }}>
+                                {gift.product_name} ({gift.points} Pts.)
                             </Typography>
 
                         </MenuItem>

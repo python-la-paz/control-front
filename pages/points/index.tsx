@@ -34,7 +34,7 @@ export default function ObtainPoints() {
     };
 
     const handleSend = async () => {
-        const response = await postObtainPoints(token, { participant_control_code: qr, presentation_id : presentationSelected  });
+        const response = await postObtainPoints(token, { participant_control_code: qr, presentation_id: presentationSelected });
         enqueueSnackbar(response.message, {
             variant: response.error ? "error" : "success",
         });
@@ -54,11 +54,17 @@ export default function ObtainPoints() {
         }
     }
     useEffect(() => {
-        if (!session) {
-            router.replace('/api/auth/signin');
-            return;
-        }
-    }, [session])
+        const fetchData = async () => {
+            if (status === 'loading') {
+                return;
+            }
+            if (!session) {
+                router.replace('/api/auth/signin');
+                return null;
+            }
+        };
+        fetchData();
+    }, [session, status]);
     useEffect(() => {
         getPresentations(token).then((res) => {
             if (res.error) {
@@ -102,7 +108,7 @@ export default function ObtainPoints() {
                 >
                     {presentations.map((presentation) => (
                         <MenuItem key={presentation.name} value={presentation._id} disabled={presentation._id === ""}>
-                            <Typography variant="body1"  sx={{display: "inline-block", whiteSpace: "pre-line", wordBreak: "break-word" }}>
+                            <Typography variant="body1" sx={{ display: "inline-block", whiteSpace: "pre-line", wordBreak: "break-word" }}>
                                 ({presentation.kind.toUpperCase()}) {presentation.name}
                             </Typography>
 

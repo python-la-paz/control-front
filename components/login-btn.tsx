@@ -94,11 +94,17 @@ export default function LoginButton() {
             </MenuItem>
           </Link>
           <Divider />
-          <Link href="/me" style={menuStyle}>
+          <Link href="/registration/view" style={menuStyle}>
+            <MenuItem onClick={handleClose}>
+              Ver Participante
+            </MenuItem>
+          </Link>
+          <Divider />
+          {/* <Link href="/me" style={menuStyle}>
             <MenuItem onClick={handleClose}>
               Perfil
             </MenuItem>
-          </Link>
+          </Link> */}
           <MenuItem onClick={() => signOut()}>Salir</MenuItem>
         </Menu>
       </>

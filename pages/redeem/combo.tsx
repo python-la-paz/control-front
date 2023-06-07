@@ -122,7 +122,7 @@ export default function RedeemCombo() {
             redeemCombos.forEach((redeemCombo) => {
                 if (redeemCombo.combo === combo._id) {
                     combo.products_items.forEach((product) => {
-                        if (product.disabled === undefined){
+                        if (product.disabled === undefined) {
                             product.disabled = false
                         }
                         product.disabled = product.disabled || redeemCombo.products.includes(product._id)
@@ -143,19 +143,19 @@ export default function RedeemCombo() {
             typeof value === 'string' ? value.split(',') : value,
         );
     };
-
     useEffect(() => {
-        if (!session) {
-            router.replace('/api/auth/signin');
-            return;
-        }
-    }, [session])
+        const fetchData = async () => {
+            if (status === 'loading') {
+                return;
+            }
+            if (!session) {
+                router.replace('/api/auth/signin');
+                return null;
+            }
+        };
+        fetchData();
+    }, [session, status]);
     useEffect(() => {
-        // if (!session) {
-        //     router.replace('/api/auth/signin');
-        //     return;
-        // }
-
         // when component mounts
         const config = { fps: 10, qrbox: 300, disableFlip: false };
         const verbose = false;
@@ -191,6 +191,9 @@ export default function RedeemCombo() {
                                 <>
                                     <Box justifyContent="center" alignItems="center" display="flex" >
                                         <Typography variant="h5">Combos y productos</Typography>
+                                    </Box>
+                                    <Box justifyContent="center" alignItems="center" display="flex" >
+                                        <Typography variant="h6">Talla: {participant.t_shirt_size}</Typography>
                                     </Box>
                                     <br />
                                     <FormControl fullWidth>

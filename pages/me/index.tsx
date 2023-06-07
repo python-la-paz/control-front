@@ -20,7 +20,6 @@ const ProtectedPage = () => {
     return (
         <div>
             <h1>Welcome, {session.user?.username}!</h1>
-            <p>This is a protected page.</p>
         </div>
     );
 };
