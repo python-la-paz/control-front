@@ -64,6 +64,7 @@ export default function ObtainPoints() {
             }
         };
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session, status]);
     useEffect(() => {
         getPresentations(token).then((res) => {
@@ -89,7 +90,7 @@ export default function ObtainPoints() {
                 console.error("Failed to clear html5QrcodeScanner. ", error);
             });
         };
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <Container fixed>

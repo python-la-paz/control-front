@@ -63,6 +63,7 @@ export default function CheckIn() {
             }
         };
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps  
     }, [session, status]);
     useEffect(() => {
         getLocations(token).then((res) => {
@@ -89,6 +90,7 @@ export default function CheckIn() {
             });
         };
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <Container fixed>

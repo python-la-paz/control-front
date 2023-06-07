@@ -75,6 +75,7 @@ export default function Registration() {
             }
         };
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session, status]);
 
     useEffect(() => {
@@ -110,7 +111,7 @@ export default function Registration() {
             {participant._id !== undefined && participant._id !== "" &&
                 <>
                     <Box justifyContent="center" alignItems="center" display="flex" >
-                        <Typography variant="h4">"{participant.name}"</Typography>
+                        <Typography variant="h4">{participant.name}</Typography>
                     </Box>
                     <Box justifyContent="center" alignItems="center" display="flex" >
                         <Typography variant="h6">{participant.registration ? "Ya registrado": "Disponible para Registrar" }</Typography>

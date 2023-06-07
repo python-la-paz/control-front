@@ -61,6 +61,7 @@ export default function RedeemMeal() {
             }
         };
         fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session, status]);
     useEffect(() => {
         // when component mounts
@@ -98,7 +99,7 @@ export default function RedeemMeal() {
                     {participant._id !== undefined && participant._id !== "" &&
                         <>
                             <Box justifyContent="center" alignItems="center" display="flex" >
-                                <Typography variant="h4">"{participant.name}"</Typography>
+                                <Typography variant="h4">{participant.name}</Typography>
                             </Box>
                             <Box justifyContent="center" alignItems="center" display="flex" >
                                 <Typography variant="h6">{participant.registration ? "Ya registrado" : "Disponible para Registrar"}</Typography>

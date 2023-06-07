@@ -63,6 +63,7 @@ export default function CheckOut() {
             }
         };
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session, status]);
     useEffect(() => {
         getLocations(token).then((res) => {
@@ -88,7 +89,7 @@ export default function CheckOut() {
                 console.error("Failed to clear html5QrcodeScanner. ", error);
             });
         };
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <Container fixed>
