@@ -13,7 +13,7 @@ services:
     networks:
       - web
     expose:
-      - "8000"
+      - "3000"
 networks:
   web:
     external: true
