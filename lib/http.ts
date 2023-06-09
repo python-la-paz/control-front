@@ -116,6 +116,21 @@ export async function getPresentations(access_token: string): Promise<{ data: Pr
     return { data, error: false };
 }
 
+export async function getPresentationsTalks(access_token: string): Promise<{ data: PresentationProps[], message?: string, error: boolean }> {
+    const res = await fetch(`/api/v1/presentation/get/talks`, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${access_token}`,
+        },
+    });
+    if (res.status !== 200) {
+        const error = await res.text();
+        return { data: [], message: `${res.status} - ${error}`, error: true }
+    }
+    const data = await res.json();
+    return { data, error: false };
+}
+
 export async function postObtainPoints(access_token: string, data: { participant_control_code: string, presentation_id: string }): Promise<{ message?: any, error: boolean }> {
     try {
         const queryArray = Object.keys(data).reduce((prev: string[], item) => {
@@ -136,6 +151,32 @@ export async function postObtainPoints(access_token: string, data: { participant
             return { message: `${res.status} - ${error}`, error: true }
         }
         return { message: "Puntos Reclamados", error: false };
+
+    } catch (error: any) {
+        return { message: error.message, error: true };
+    }
+}
+
+export async function postObtainPointsParticipation(access_token: string, data: { participant_control_code: string, presentation_id: string }): Promise<{ message?: any, error: boolean }> {
+    try {
+        const queryArray = Object.keys(data).reduce((prev: string[], item) => {
+            const value = data[item as keyof typeof data];
+            if (value !== undefined) {
+                prev.push(`${item}=${value}`);
+            }
+            return prev;
+        }, []);
+        const res = await fetch(`/api/v1/points/participation?${queryArray.join(`&`)}`, {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${access_token}`,
+            },
+        })
+        if (res.status !== 200) {
+            const error = await res.text();
+            return { message: `${res.status} - ${error}`, error: true }
+        }
+        return { message: "Participación Registrada", error: false };
 
     } catch (error: any) {
         return { message: error.message, error: true };

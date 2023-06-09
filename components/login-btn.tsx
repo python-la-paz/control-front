@@ -88,6 +88,11 @@ export default function LoginButton() {
               Registrar Puntos
             </MenuItem>
           </Link>
+          <Link href="/points/participation" style={menuStyle}>
+            <MenuItem onClick={handleClose}>
+              Registrar Participación
+            </MenuItem>
+          </Link>
           <Link href="/points/redeem" style={menuStyle}>
             <MenuItem onClick={handleClose}>
               Canjear Regalos

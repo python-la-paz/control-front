@@ -22,6 +22,9 @@ export type ParticipantProps = {
     ci: string;
     control_code: string;
     combos: string[];
+    locations: string[];
+    combos_items: string[];
+    locations_items: string[];
     points: number;
     mail: string;
     phone: string;

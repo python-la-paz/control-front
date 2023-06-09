@@ -61,23 +61,21 @@ export default function CheckIn() {
                 router.replace('/api/auth/signin');
                 return null;
             }
+            getLocations(session.user !== undefined ? session.user.access_token : "" ).then((res) => {
+                if (res.error) {
+                    enqueueSnackbar(res.message, {
+                        variant: "error",
+                    });
+                } else {
+                    const data = empty.concat(res.data)
+                    setLocations(data)
+                }
+            })
         };
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps  
     }, [session, status]);
     useEffect(() => {
-        getLocations(token).then((res) => {
-            if (res.error) {
-                enqueueSnackbar(res.message, {
-                    variant: "error",
-                });
-            } else {
-                const data = empty.concat(res.data)
-                setLocations(data)
-            }
-
-        })
-
         // when component mounts
         const config = { fps: 10, qrbox: 300, disableFlip: false };
         const verbose = false;

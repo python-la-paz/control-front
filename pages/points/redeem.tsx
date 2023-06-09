@@ -62,23 +62,22 @@ export default function RedeemPoints() {
                 router.replace('/api/auth/signin');
                 return null;
             }
+            getGifts(session.user !== undefined ? session.user.access_token : "").then((res) => {
+                if (res.error) {
+                    enqueueSnackbar(res.message, {
+                        variant: "error",
+                    });
+                } else {
+                    const data = empty.concat(res.data)
+                    setGifts(data)
+                }
+
+            })
         };
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session, status]);
     useEffect(() => {
-        getGifts(token).then((res) => {
-            if (res.error) {
-                enqueueSnackbar(res.message, {
-                    variant: "error",
-                });
-            } else {
-                const data = empty.concat(res.data)
-                setGifts(data)
-            }
-
-        })
-
         // when component mounts
         const config = { fps: 10, qrbox: 300, disableFlip: false };
         const verbose = false;

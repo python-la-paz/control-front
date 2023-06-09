@@ -61,7 +61,7 @@ export default function RedeemMeal() {
             }
         };
         fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session, status]);
     useEffect(() => {
         // when component mounts
@@ -112,6 +112,40 @@ export default function RedeemMeal() {
                                     <Box justifyContent="center" alignItems="center" display="flex">
                                         <Typography variant="h6">Puntos: {participant.points}</Typography>
                                     </Box>
+                                </>
+                            }
+                            {participant.combos_items &&
+                                <>
+                                    {participant.combos_items.length > 0 &&
+                                        <Box justifyContent="center" alignItems="center" display="flex">
+                                            <Typography variant="h6">Combos:</Typography>
+                                        </Box>
+                                    }
+                                    {participant.combos_items.map((combo, index) => {
+                                        return (
+                                            <Box justifyContent="center" alignItems="center" display="flex" key={index}>
+                                                <Typography variant="h6">{combo}</Typography>
+                                            </Box>
+                                        )
+                                    })}
+
+                                </>
+                            }
+                            <br />
+                            {participant.locations_items &&
+                                <>
+                                    {participant.locations_items.length > 0 &&
+                                        <Box justifyContent="center" alignItems="center" display="flex">
+                                            <Typography variant="h6">Lugares:</Typography>
+                                        </Box>
+                                    }
+                                    {participant.locations_items.map((location, index) => {
+                                        return (
+                                            <Box justifyContent="center" alignItems="center" display="flex" key={index}>
+                                                <Typography variant="h6">{location}</Typography>
+                                            </Box>
+                                        )
+                                    })}
                                 </>
                             }
                         </>
