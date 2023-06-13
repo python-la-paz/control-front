@@ -1,7 +1,7 @@
 version: '3.9' 
 services:
   app:
-    image: pythonlapaz/control-front:latest
+    image: gcr.io/jevillanueva/pythonlapaz/control-front:latest
     restart: always
     labels:
       - traefik.http.routers.${TRAEFIK_ROUTE}.rule=Host(${TRAEFIK_APP_DOMAIN})
