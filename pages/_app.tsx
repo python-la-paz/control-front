@@ -31,8 +31,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps<{ s
           horizontal: 'center',
         }}>
           <Head>
-            <title>PyDay La Paz 2023</title>
-            <meta name="description" content="PyDay La Paz 2023" />
+            <title>Control</title>
+            <meta name="description" content="Control" />
             <meta name="viewport" content="initial-scale=1, width=device-width" />
           </Head>
           <ThemeProvider theme={theme}>

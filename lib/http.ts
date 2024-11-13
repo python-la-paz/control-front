@@ -1,4 +1,4 @@
-import { ComboProps, GiftProps, LocationProps, ParticipantProps, ParticipantRedeemCombosProps, PresentationProps } from "@/const";
+import { ComboProps, GiftProps, LocationProps, ParticipantProps, ParticipantRedeemCombosProps, PresentationProps, SpecialPointProps } from "@/const";
 
 export async function postLogin(formData: FormData): Promise<Response> {
     return await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/v1/auth/token", {
@@ -131,6 +131,21 @@ export async function getPresentationsTalks(access_token: string): Promise<{ dat
     return { data, error: false };
 }
 
+export async function getSpecialPoints(access_token: string): Promise<{ data: SpecialPointProps[], message?: string, error: boolean }> {
+    const res = await fetch(`/api/v1/special_point`, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${access_token}`,
+        },
+    });
+    if (res.status !== 200) {
+        const error = await res.text();
+        return { data: [], message: `${res.status} - ${error}`, error: true }
+    }
+    const data = await res.json();
+    return { data, error: false };
+}
+
 export async function postObtainPoints(access_token: string, data: { participant_control_code: string, presentation_id: string }): Promise<{ message?: any, error: boolean }> {
     try {
         const queryArray = Object.keys(data).reduce((prev: string[], item) => {
@@ -177,6 +192,32 @@ export async function postObtainPointsParticipation(access_token: string, data: 
             return { message: `${res.status} - ${error}`, error: true }
         }
         return { message: "Participación Registrada", error: false };
+
+    } catch (error: any) {
+        return { message: error.message, error: true };
+    }
+}
+
+export async function postObtainSpecialPoints(access_token: string, data: { participant_control_code: string, special_point: string }): Promise<{ message?: any, error: boolean }> {
+    try {
+        const queryArray = Object.keys(data).reduce((prev: string[], item) => {
+            const value = data[item as keyof typeof data];
+            if (value !== undefined) {
+                prev.push(`${item}=${value}`);
+            }
+            return prev;
+        }, []);
+        const res = await fetch(`/api/v1/special_point/redeem?${queryArray.join(`&`)}`, {
+            method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${access_token}`,
+            },
+        })
+        if (res.status !== 200) {
+            const error = await res.text();
+            return { message: `${res.status} - ${error}`, error: true }
+        }
+        return { message: "Puntos especiales canjeados", error: false };
 
     } catch (error: any) {
         return { message: error.message, error: true };
@@ -234,6 +275,27 @@ export async function getParticipantByControlCode(access_token: string, data: { 
         return prev;
     }, []);
     const res = await fetch(`/api/v1/participant/user/code?${queryArray.join(`&`)}`, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${access_token}`,
+        },
+    });
+    if (res.status !== 200) {
+        const error = await res.text();
+        return { data: {} as ParticipantProps, message: `${res.status} - ${error}`, error: true }
+    }
+    const data_fetch = await res.json();
+    return { data: data_fetch, error: false };
+}
+export async function getParticipantByCiFull(access_token: string, data: { ci: string }): Promise<{ data: ParticipantProps, message?: string, error: boolean }> {
+    const queryArray = Object.keys(data).reduce((prev: string[], item) => {
+        const value = data[item as keyof typeof data];
+        if (value !== undefined) {
+            prev.push(`${item}=${value}`);
+        }
+        return prev;
+    }, []);
+    const res = await fetch(`/api/v1/participant/user/code/ci?${queryArray.join(`&`)}`, {
         method: 'GET',
         headers: {
             "Authorization": `Bearer ${access_token}`,
@@ -315,7 +377,7 @@ export async function postGetCombosList(access_token: string, data: string[]): P
 
 export async function postRedeemCombo(access_token: string, data: { participant_control_code: string, combo_id: string, products_id: string[] }): Promise<{ message?: any, error: boolean }> {
     try {
-        
+
         const res = await fetch(`/api/v1/combo/redeem/user`, {
             method: 'POST',
             body: JSON.stringify(data),
@@ -333,4 +395,19 @@ export async function postRedeemCombo(access_token: string, data: { participant_
     } catch (error: any) {
         return { message: error.message, error: true };
     }
+}
+
+export async function fetchRoles(access_token: string): Promise<{ data: string[], message?: string, error: boolean }> {
+    const res = await fetch(`/api/v1/auth/users/me/roles`, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${access_token}`,
+        },
+    });
+    if (res.status !== 200) {
+        const error = await res.text();
+        return { data: [], message: `${res.status} - ${error}`, error: true }
+    }
+    const data = await res.json();
+    return { data, error: false };
 }

@@ -1,10 +1,16 @@
-import exp from "constants";
 
 export type LocationProps = {
     _id: string;
     name: string;
     value: string;
 };
+
+export type SpecialPointProps = {
+    _id: string;
+    description: string;
+    points: number;
+};
+
 export type PresentationProps = {
     _id: string;
     name: string;

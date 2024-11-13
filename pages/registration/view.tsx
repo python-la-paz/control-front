@@ -1,13 +1,13 @@
-import { getParticipantByControlCode } from "@/lib/http";
-import { Box, Button, Container, Typography } from "@mui/material";
-import { Html5QrcodeScanner } from "html5-qrcode";
-import { useEffect, useState } from "react";
-import { useSnackbar } from "notistack";
-import { useRecoilState } from "recoil";
 import { accessTokenState } from "@/atoms";
+import { ParticipantProps } from "@/const";
+import { getParticipantByCiFull, getParticipantByControlCode } from "@/lib/http";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { Html5QrcodeScanner } from "html5-qrcode";
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
-import { ParticipantProps } from "@/const";
+import { useSnackbar } from "notistack";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 let html5QrcodeScanner: Html5QrcodeScanner;
 export default function RedeemMeal() {
     const router = useRouter();
@@ -17,8 +17,30 @@ export default function RedeemMeal() {
     const [participant, setParticipant] = useState<ParticipantProps>({} as ParticipantProps)
     const { enqueueSnackbar } = useSnackbar();
     const [qr, setQR] = useState<string>("")
+    const [ci, setCI] = useState<string>("")
+
     const qrcodeRegionId = "html5qr-code-full-region-view-participant";
 
+    const handleCIChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCI(event.target.value);
+    };
+    const handleSearch = async () => {
+        setParticipant({} as ParticipantProps)
+        if (ci === "") {
+            enqueueSnackbar("Ingrese un carnet de identidad", {
+                variant: "error",
+            });
+            return;
+        }
+        const response = await getParticipantByCiFull(token, { ci: ci });
+        if (response.error) {
+            enqueueSnackbar(response.message, {
+                variant: response.error ? "error" : "success",
+            });
+            return;
+        }
+        setParticipant(response.data)
+    }
 
     const onNewScanResult = (qr: string) => {
         setQR(qr)
@@ -83,6 +105,14 @@ export default function RedeemMeal() {
                 <Typography variant="h4">Ver Participante</Typography>
             </Box>
             <br />
+            <Box>
+                <TextField id="ci" label="Carnet de Identidad" variant="outlined" value={ci} onChange={handleCIChange} fullWidth />
+            </Box>
+            <br />
+            <Box>
+                <Button fullWidth variant="contained" onClick={handleSearch}>Buscar Participante</Button>
+            </Box>
+            <br />
             <br />
             <div id={qrcodeRegionId} />
             <br />
@@ -96,62 +126,62 @@ export default function RedeemMeal() {
                         <Button fullWidth variant="outlined" color="error" onClick={handleClean}>Limpiar</Button>
                     </Box>
                     <br />
-                    {participant._id !== undefined && participant._id !== "" &&
+                </>
+            }
+            {participant._id !== undefined && participant._id !== "" &&
+                <>
+                    <Box justifyContent="center" alignItems="center" display="flex" >
+                        <Typography variant="h4">{participant.name}</Typography>
+                    </Box>
+                    <Box justifyContent="center" alignItems="center" display="flex" >
+                        <Typography variant="h6">{participant.registration ? "Ya registrado" : "Disponible para Registrar"}</Typography>
+                    </Box>
+                    <Box justifyContent="center" alignItems="center" display="flex" >
+                        <Typography variant="h6">Talla: {participant.t_shirt_size}</Typography>
+                    </Box>
+                    {participant.registration &&
                         <>
-                            <Box justifyContent="center" alignItems="center" display="flex" >
-                                <Typography variant="h4">{participant.name}</Typography>
+                            <Box justifyContent="center" alignItems="center" display="flex">
+                                <Typography variant="h6">Puntos: {participant.points}</Typography>
                             </Box>
-                            <Box justifyContent="center" alignItems="center" display="flex" >
-                                <Typography variant="h6">{participant.registration ? "Ya registrado" : "Disponible para Registrar"}</Typography>
-                            </Box>
-                            <Box justifyContent="center" alignItems="center" display="flex" >
-                                <Typography variant="h6">Talla: {participant.t_shirt_size}</Typography>
-                            </Box>
-                            {participant.registration &&
-                                <>
-                                    <Box justifyContent="center" alignItems="center" display="flex">
-                                        <Typography variant="h6">Puntos: {participant.points}</Typography>
-                                    </Box>
-                                </>
-                            }
-                            {participant.combos_items &&
-                                <>
-                                    {participant.combos_items.length > 0 &&
-                                        <Box justifyContent="center" alignItems="center" display="flex">
-                                            <Typography variant="h6">Combos:</Typography>
-                                        </Box>
-                                    }
-                                    {participant.combos_items.map((combo, index) => {
-                                        return (
-                                            <Box justifyContent="center" alignItems="center" display="flex" key={index}>
-                                                <Typography variant="h6">{combo}</Typography>
-                                            </Box>
-                                        )
-                                    })}
-
-                                </>
-                            }
-                            <br />
-                            {participant.locations_items &&
-                                <>
-                                    {participant.locations_items.length > 0 &&
-                                        <Box justifyContent="center" alignItems="center" display="flex">
-                                            <Typography variant="h6">Lugares:</Typography>
-                                        </Box>
-                                    }
-                                    {participant.locations_items.map((location, index) => {
-                                        return (
-                                            <Box justifyContent="center" alignItems="center" display="flex" key={index}>
-                                                <Typography variant="h6">{location}</Typography>
-                                            </Box>
-                                        )
-                                    })}
-                                </>
-                            }
                         </>
+                    }
+                    {participant.combos_items &&
+                        <>
+                            {participant.combos_items.length > 0 &&
+                                <Box justifyContent="center" alignItems="center" display="flex">
+                                    <Typography variant="h6">Combos:</Typography>
+                                </Box>
+                            }
+                            {participant.combos_items.map((combo, index) => {
+                                return (
+                                    <Box justifyContent="center" alignItems="center" display="flex" key={index}>
+                                        <Typography variant="h6">{combo}</Typography>
+                                    </Box>
+                                )
+                            })}
 
+                        </>
+                    }
+                    <br />
+                    {participant.locations_items &&
+                        <>
+                            {participant.locations_items.length > 0 &&
+                                <Box justifyContent="center" alignItems="center" display="flex">
+                                    <Typography variant="h6">Lugares:</Typography>
+                                </Box>
+                            }
+                            {participant.locations_items.map((location, index) => {
+                                return (
+                                    <Box justifyContent="center" alignItems="center" display="flex" key={index}>
+                                        <Typography variant="h6">{location}</Typography>
+                                    </Box>
+                                )
+                            })}
+                        </>
                     }
                 </>
+
             }
         </Container>
     )

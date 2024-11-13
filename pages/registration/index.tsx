@@ -1,14 +1,13 @@
+import { accessTokenState } from "@/atoms";
+import { ParticipantProps } from "@/const";
 import { getParticipantByCi, postRegistration } from "@/lib/http";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { Html5QrcodeScanner } from "html5-qrcode";
-import { Html5Qrcode } from "html5-qrcode";
-import { useEffect, useState } from "react";
-import { useSnackbar } from "notistack";
-import { useRecoilState } from "recoil";
-import { accessTokenState } from "@/atoms";
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
-import { ParticipantProps } from "@/const";
+import { useSnackbar } from "notistack";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 let html5QrcodeScanner: Html5QrcodeScanner;
 export default function Registration() {
     const router = useRouter();
@@ -114,7 +113,7 @@ export default function Registration() {
                         <Typography variant="h4">{participant.name}</Typography>
                     </Box>
                     <Box justifyContent="center" alignItems="center" display="flex" >
-                        <Typography variant="h6">{participant.registration ? "Ya registrado": "Disponible para Registrar" }</Typography>
+                        <Typography variant="h6">{participant.registration ? "Ya registrado" : "Disponible para Registrar"}</Typography>
                     </Box>
                 </>
 

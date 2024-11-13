@@ -1,14 +1,13 @@
+import { accessTokenState } from "@/atoms";
+import { PresentationProps } from "@/const";
 import { getPresentationsTalks, postObtainPointsParticipation } from "@/lib/http";
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { Html5QrcodeScanner } from "html5-qrcode";
-import { useEffect, useState } from "react";
-import { useSnackbar } from "notistack";
-import { useRecoilState } from "recoil";
-import { accessTokenState } from "@/atoms";
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
-import { PresentationProps } from "@/const";
-import React from "react";
+import { useSnackbar } from "notistack";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 let html5QrcodeScanner: Html5QrcodeScanner;
 export default function ObtainPoints() {
     const router = useRouter();
@@ -62,7 +61,7 @@ export default function ObtainPoints() {
                 router.replace('/api/auth/signin');
                 return null;
             }
-            getPresentationsTalks(session.user !== undefined ? session.user.access_token : "" ).then((res) => {
+            getPresentationsTalks(session.user !== undefined ? session.user.access_token : "").then((res) => {
                 if (res.error) {
                     enqueueSnackbar(res.message, {
                         variant: "error",

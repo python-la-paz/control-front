@@ -95,7 +95,7 @@ export default function ObtainPoints() {
     return (
         <Container fixed>
             <Box justifyContent="center" alignItems="center" display="flex" >
-                <Typography variant="h4">Registrar Puntos</Typography>
+                <Typography variant="h4">Registrar Puntos de Asistencia</Typography>
             </Box>
             <br />
             <FormControl fullWidth>
