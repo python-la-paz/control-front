@@ -34,6 +34,32 @@ export async function postRegistration(access_token: string, data: { ci: string,
     }
 }
 
+export async function postUnRegistration(access_token: string, data: { control_code: string }): Promise<{ message?: any, error: boolean }> {
+    try {
+        const queryArray = Object.keys(data).reduce((prev: string[], item) => {
+            const value = data[item as keyof typeof data];
+            if (value) {
+                prev.push(`${item}=${value}`);
+            }
+            return prev;
+        }, []);
+        const res = await fetch(`/api/v1/participant/unregistration?${queryArray.join(`&`)}`, {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${access_token}`,
+            },
+        })
+        if (res.status !== 200) {
+            const error = await res.text();
+            return { message: `${res.status} - ${error}`, error: true }
+        }
+        return { message: "Participante desvinculado", error: false };
+
+    } catch (error: any) {
+        return { message: error.message, error: true };
+    }
+}
+
 export async function getLocations(access_token: string): Promise<{ data: LocationProps[], message?: string, error: boolean }> {
     const res = await fetch(`/api/v1/location`, {
         method: 'GET',
@@ -207,7 +233,7 @@ export async function postObtainSpecialPoints(access_token: string, data: { part
             }
             return prev;
         }, []);
-        const res = await fetch(`/api/v1/special_point/redeem?${queryArray.join(`&`)}`, {
+        const res = await fetch(`/api/v1/special_point/redeem/special?${queryArray.join(`&`)}`, {
             method: 'GET',
             headers: {
                 "Authorization": `Bearer ${access_token}`,

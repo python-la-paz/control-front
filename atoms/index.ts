@@ -15,4 +15,5 @@ export const defaultRoles = {
   swag: "swag",
   information: "information",
   special_point: "special_point",
+  revocation: "revocation",
 }

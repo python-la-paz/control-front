@@ -93,7 +93,7 @@ export default function ObtainPoints() {
     return (
         <Container fixed>
             <Box justifyContent="center" alignItems="center" display="flex" >
-                <Typography variant="h4">Registrar Participación</Typography>
+                <Typography variant="h4">Registrar Puntos Especiales</Typography>
             </Box>
             <br />
             <FormControl fullWidth>

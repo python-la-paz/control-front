@@ -135,6 +135,14 @@ export default function LoginButton() {
               </MenuItem>
             </Link>
           }
+          {
+            roles.includes(defaultRoles.revocation) &&
+            <Link href="/registration/revocation" style={menuStyle}>
+              <MenuItem onClick={handleClose}>
+                Revocar Participante
+              </MenuItem>
+            </Link>
+          }
           <Divider />
           {/* <Link href="/redeem/combo" style={menuStyle}>
             <MenuItem onClick={handleClose}>
