@@ -10,7 +10,7 @@ export default function BasicGrid(props: { children?: any }) {
           <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 <Link href="/" color="inherit" style={{textDecoration: "none", color: "inherit"}}>
-                {"PyDay La Paz 2024"}
+                {"PyDay La Paz 2025"}
                 </Link>
               </Typography>
             <LoginButton />
