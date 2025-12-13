@@ -16,4 +16,5 @@ export const defaultRoles = {
   information: "information",
   special_point: "special_point",
   revocation: "revocation",
+  combo: "combo",
 }

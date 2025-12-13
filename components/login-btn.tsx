@@ -112,6 +112,14 @@ export default function LoginButton() {
             </Link>
           }
           {
+            roles.includes(defaultRoles.combo) &&
+            <Link href="/redeem/combo" style={menuStyle}>
+              <MenuItem onClick={handleClose}>
+                Canjear Combos
+              </MenuItem>
+            </Link>
+          }
+          {
             roles.includes(defaultRoles.swag) &&
             <Link href="/points/redeem" style={menuStyle}>
               <MenuItem onClick={handleClose}>
