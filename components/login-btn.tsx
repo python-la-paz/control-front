@@ -6,13 +6,15 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
+import ParticipationDialog from "./participation-dialog";
 
-export default function LoginButton() {
+export default function LoginButton({ isSelfService = false }: { isSelfService?: boolean }) {
   const menuStyle = { textDecoration: "none", color: "inherit" }
   const [token, setAccessTokenState] = useRecoilState(accessTokenState);
   const [roles, setRoles] = useRecoilState(rolesState);
   const { data: session, status } = useSession()
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [participationOpen, setParticipationOpen] = React.useState(false);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -34,7 +36,7 @@ export default function LoginButton() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, status]);
-  if (session) {
+  if (session && !isSelfService) {
     return (
       <>
         <Button
@@ -171,7 +173,7 @@ export default function LoginButton() {
     <>
       <IconButton
         size="large"
-        aria-label="account of current user"
+        aria-label={isSelfService ? "Menú de autoservicio" : "account of current user"}
         aria-controls="menu-appbar"
         aria-haspopup="true"
         onClick={handleMenu}
@@ -194,8 +196,25 @@ export default function LoginButton() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={() => signIn()}>Ingresar</MenuItem>
+        {isSelfService ? [
+          <MenuItem key="acreditation" component={Link} href="/self/acreditation" onClick={handleClose}>
+            Acreditarse
+          </MenuItem>,
+          <MenuItem key="participation" aria-haspopup="dialog" onClick={() => { handleClose(); setParticipationOpen(true); }}>
+            Participación
+          </MenuItem>,
+          <MenuItem key="redeem" component={Link} href="/self/redeem/reward" onClick={handleClose}>
+            Canjear puntos
+          </MenuItem>,
+          <MenuItem key="gift" component={Link} href="/self/redeem/gift" onClick={handleClose}>
+            Canjear regalo
+          </MenuItem>
+          
+        ] : (
+          <MenuItem onClick={() => signIn()}>Ingresar</MenuItem>
+        )}
       </Menu>
+      <ParticipationDialog open={isSelfService && participationOpen} onClose={() => setParticipationOpen(false)} />
     </>
   )
 }

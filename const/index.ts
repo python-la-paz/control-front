@@ -59,3 +59,39 @@ export type ParticipantRedeemCombosProps = {
     combo: string;
     products: string[];
 }
+
+export type SelfServiceRegisterRequest = {
+    ci: string;
+    birthday: string;
+}
+
+export type SelfServiceParticipant = {
+    _id: string;
+    control_code: string;
+    qr_code: string;
+}
+
+export type SelfServiceResult = {
+    control_code: string;
+    message: string;
+    points: number;
+}
+
+export type SelfServiceGift = {
+    _id: string;
+    name: string;
+    description: string;
+    kind: string;
+    points: number;
+    multiple: boolean;
+    stock: number;
+}
+
+export type SelfServiceRedeem = {
+    control_code: string;
+    message: string;
+    points: number;
+    product_name: string;
+    discount_code: string;
+    download_url: string;
+}
