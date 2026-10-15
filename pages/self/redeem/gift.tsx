@@ -119,7 +119,7 @@ export default function SelfGiftRedeem() {
 				}
 				{available && <>
 					{!result && <Alert severity="success">Hay un regalo disponible</Alert>}
-					<Button component="label" variant="outlined" startIcon={<UploadFileIcon />} disabled={busy || !!result}>
+					<Button component="label" variant="contained" startIcon={<UploadFileIcon />} disabled={busy || !!result}>
 						{reading ? "Leyendo QR..." : "Subir credencial QR"}
 						<input hidden type="file" accept="image/*" onChange={handleFileSelection} disabled={busy || !!result} />
 					</Button>

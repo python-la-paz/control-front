@@ -1,8 +1,8 @@
 import { accessTokenState } from "@/atoms";
 import { SpecialPointProps } from "@/const";
 import { getSpecialPoints, postObtainSpecialPoints } from "@/lib/http";
-import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
+import { Html5QrcodeScanner, Html5QrcodeScannerState } from "html5-qrcode";
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
 import { useSnackbar } from "notistack";
@@ -39,7 +39,7 @@ export default function ObtainPoints() {
         });
         if (!response.error) {
             handleClean();
-        } else {
+        } else if (html5QrcodeScanner.getState() === Html5QrcodeScannerState.PAUSED) {
             html5QrcodeScanner.resume();
         }
     }
@@ -47,7 +47,9 @@ export default function ObtainPoints() {
         setQR("")
         try {
             console.log(html5QrcodeScanner);
-            html5QrcodeScanner.resume()
+            if (html5QrcodeScanner.getState() === Html5QrcodeScannerState.PAUSED) {
+                html5QrcodeScanner.resume()
+            }
         } catch (e) {
             console.log(e)
         }
@@ -118,6 +120,15 @@ export default function ObtainPoints() {
             <br />
             <br />
             <div id={qrcodeRegionId} />
+            <br />
+            <TextField
+                fullWidth
+                id="participant-control-code"
+                label="Código del participante"
+                value={qr}
+                onChange={(event) => setQR(event.target.value)}
+            />
+            <br />
             <br />
             {qr !== "" &&
                 <>

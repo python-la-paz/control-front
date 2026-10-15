@@ -134,7 +134,7 @@ export default function SelfParticipationCheck() {
 				}
 				{valid && <>
 					<Alert severity="success">Código de participación válido</Alert>
-					<Button component="label" variant="outlined" startIcon={<UploadFileIcon />} disabled={reading || submitting}>
+					<Button component="label" variant="contained" startIcon={<UploadFileIcon />} disabled={reading || submitting}>
 						{reading ? "Leyendo QR..." : "Subir credencial QR"}
 						<input hidden type="file" accept="image/*" onChange={handleFileSelection} disabled={reading || submitting} />
 					</Button>

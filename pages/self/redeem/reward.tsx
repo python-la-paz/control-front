@@ -169,7 +169,7 @@ export default function SelfRewardRedeem() {
 		<Container maxWidth="sm" sx={{ py: 4 }}>
 			<Stack spacing={3}>
 				<Typography component="h1" variant="h4">Canje de premios</Typography>
-				<Button component="label" variant="outlined" startIcon={<UploadFileIcon />} disabled={busy}>
+				<Button component="label" variant="contained" startIcon={<UploadFileIcon />} disabled={busy}>
 					{reading ? "Leyendo QR y consultando puntos..." : "Subir credencial QR"}
 					<input hidden type="file" accept="image/*" onChange={handleFileSelection} disabled={busy} />
 				</Button>
