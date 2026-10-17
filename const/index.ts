@@ -84,7 +84,7 @@ export type SelfServiceGift = {
     kind: string;
     points: number;
     multiple: boolean;
-    stock: number;
+    stock: number | null;
 }
 
 export type SelfServiceRedeem = {

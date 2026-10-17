@@ -48,7 +48,7 @@ export default function SelfRewardRedeem() {
 	const [redemptions, setRedemptions] = useState<SelfServiceRedeem[]>([]);
 	const [redeemedGiftIds, setRedeemedGiftIds] = useState<string[]>([]);
 	const pendingRef = useRef(false);
-	const availableRewards = rewards.filter(reward => reward.stock > 0);
+	const availableRewards = rewards.filter(reward => reward.stock === null || reward.stock > 0);
 	const selectedReward = availableRewards.find(reward => reward._id === giftId);
 	const busy = loadingRewards || reading || redeeming || refreshing;
 	const alreadyRedeemed = !!selectedReward && !selectedReward.multiple && redeemedGiftIds.includes(selectedReward._id);
@@ -196,7 +196,7 @@ export default function SelfRewardRedeem() {
 				</FormControl>
 				{selectedReward && <Box>
 					{selectedReward.description && <Typography sx={{ mb: 1 }}>{selectedReward.description}</Typography>}
-					<Typography variant="body2" color="text.secondary">Stock: {selectedReward.stock} | {selectedReward.multiple ? "Canje múltiple" : "Un canje por participante"}</Typography>
+					<Typography variant="body2" color="text.secondary">Stock: {selectedReward.stock === null ? "ilimitado" : selectedReward.stock} | {selectedReward.multiple ? "Canje múltiple" : "Un canje por participante"}</Typography>
 				</Box>}
 				{insufficientPoints && selectedReward && points !== null && <Alert severity="warning">Te faltan {selectedReward.points - points} puntos para este premio.</Alert>}
 				{alreadyRedeemed && <Alert severity="info">Ya canjeaste este premio.</Alert>}
