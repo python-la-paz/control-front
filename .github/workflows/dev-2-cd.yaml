@@ -54,7 +54,7 @@ jobs:
 
       - name: Update image repository and tag
         env:
-          VALUES_FILE: ${{ vars.argocd_values_file }}
+          VALUES_FILE: ${{ inputs.argocd_values_file }}
           IMAGE_REPOSITORY: ${{ inputs.image_repository }}
           IMAGE_TAG: ${{ inputs.image_tag }}
           IMAGE_REPOSITORY_PATH: ${{ inputs.image_repository_path }}
